@@ -12,6 +12,12 @@
 1                !Channel for current input (Pin 2: Analog input 1)
 0                !Range for differential inputs - values differ on Windows and Linux! 0 for ±5V on Windows, 6 on Linux
 2.003            !Output Voltage offset (V)
-0.0008            !Input Voltage offset (V)
+0.0008           !Input Voltage offset (V)
 0.0              !Input Current offset (V)
-GPIB0::13::INSTR ! Power Meter address
+GPIB0::12::INSTR !Power Meter PyVisa address
+7                !Load control bit
+1                !Load control out value (usually cold load)
+1.0              !Time to sleep while waiting for load to move
+77.0             !Cold Load temperature
+293.0            !Hot Load temperature
+20               !Number of points to take before switching load

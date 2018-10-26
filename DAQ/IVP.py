@@ -16,7 +16,7 @@ import numpy as np
 import IV
 import matplotlib.pyplot as plt
 import PowerMeter as PM
-import gpib
+import visa
 
 
 
@@ -44,7 +44,7 @@ class IVP(IV.IV):
             pm_address = self.pm_address
 
         try:
-            rm = visa.ResourceManager("@py")
+            rm = visa.ResourceManager()
             lr = rm.list_resources()
             if pm_address in lr:
                 self.pm = PM.PowerMeter(rm.open_resource(pm_address))
@@ -71,7 +71,7 @@ class IVP(IV.IV):
         data = self.getData()
 
         if self.verbose:
-            print("New Bias Point: {:.4g} mV".format(bias)")
+            print("New Bias Point: {:.4g} mV".format(bias))
             if len(data) == 3:
                 print("  Voltage: {:.4g} mV, Current: {:.4g} mA, IF Power: {:.4g} W".format(data[0], data[1], data[2]))
             else:
@@ -122,7 +122,7 @@ class IVP(IV.IV):
                 self.Pdata[index] = 0.0
 
             if index%5 == 0 and self.verbose:
-                print("\t{:.3f}\t\t{:.3f}\t\t{:.3f}\t\t{:.3g}".format(self.BiasPts[index], self.Vdata[index], self.Idata[index], self.Pdata[index]))
+                print("\t{:.3f}\t\t{:.3g}\t\t{:.3g}\t\t{:.3g}".format(self.BiasPts[index], self.Vdata[index], self.Idata[index], self.Pdata[index]))
 
 
     def endPM(self):
@@ -139,7 +139,7 @@ class IVP(IV.IV):
 
         # Writes data to spreadsheet
         # Write a header describing the data
-        out.write("# Bias (mV)\t\tVoltage (mV)\t\tCurrent (mA)\n")
+        out.write("# Bias (mV)\t\tVoltage (mV)\t\tCurrent (mA)\t\tIF Power (W)\n")
         for i in range(len(self.Vdata)):
             out.write("{:.6g},\t{:.6g},\t{:.6g},\t{:.6g}\n".format(self.BiasPts[i], self.Vdata[i], self.Idata[i], self.Pdata[i]))
 

@@ -251,7 +251,7 @@ class IV:
 
             # Outputs data while sweep is being taken
             if index%5 == 0 and self.verbose:
-                print("\t{:.3f}\t\t{:.3f}\t\t{:.3f}".format(bias, self.Vdata[index], self.Idata[index]))
+                print("\t{:.3g}\t\t{:.3g}\t\t{:.3g}".format(bias, self.Vdata[index], self.Idata[index]))
 
 
     def endSweep(self):
