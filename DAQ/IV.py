@@ -251,7 +251,7 @@ class IV:
 
             # Outputs data while sweep is being taken
             if index%5 == 0 and self.verbose:
-                print("\t{:.3g}\t\t{:.3g}\t\t{:.3g}".format(bias, self.Vdata[index], self.Idata[index]))
+                print("\t{:10.6g}\t{:10.6g}\t{:10.6g}".format(bias, self.Vdata[index], self.Idata[index]))
 
 
     def endSweep(self):
@@ -283,15 +283,14 @@ class IV:
         out.write("# Bias (mV)\t\tVoltage (mV)\t\tCurrent (mA)\n")
         # Write out the data
         for i in range(len(self.Vdata)):
-            out.write("{:.6g},\t{:.6g},\t{:.6g}\n".format(self.BiasPts[i], self.Vdata[i], self.Idata[i]))
+            out.write("{:10.6g},\t{:10.6g},\t{:10.6g}\n".format(self.BiasPts[i], self.Vdata[i], self.Idata[i]))
         out.close()
 
     def plotIV(self):
         """Plot the IV curve data on the figure"""
-        self.ax.plot(self.Vdata, self.Idata, 'r-')
+        self.ax.plot(self.Vdata, self.Idata, 'k-')
         self.ax.set(xlabel="Voltage (mV)")
         self.ax.set(ylabel="Current (mA)")
-        self.ax.set(title="IV Sweep")
         self.ax.grid()
         #self.ax.axis([min(self.Vdata), max(self.Vdata), min(self.Idata), max(self.Idata)])
 
@@ -304,6 +303,8 @@ class IV:
             plt.ion()
         self.fig, self.ax = plt.subplots()
         self.plotIV()
+        self.ax.set(title="IV Sweep")
+
         self.fig.show()
 
 

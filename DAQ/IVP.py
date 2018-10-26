@@ -122,7 +122,7 @@ class IVP(IV.IV):
                 self.Pdata[index] = 0.0
 
             if index%5 == 0 and self.verbose:
-                print("\t{:.3f}\t\t{:.3g}\t\t{:.3g}\t\t{:.3g}".format(self.BiasPts[index], self.Vdata[index], self.Idata[index], self.Pdata[index]))
+                print("\t{:10.6g}\t{:10.6g}\t{:10.6g}\t{:10.6g}".format(self.BiasPts[index], self.Vdata[index], self.Idata[index], self.Pdata[index]))
 
 
     def endPM(self):
@@ -141,15 +141,14 @@ class IVP(IV.IV):
         # Write a header describing the data
         out.write("# Bias (mV)\t\tVoltage (mV)\t\tCurrent (mA)\t\tIF Power (W)\n")
         for i in range(len(self.Vdata)):
-            out.write("{:.6g},\t{:.6g},\t{:.6g},\t{:.6g}\n".format(self.BiasPts[i], self.Vdata[i], self.Idata[i], self.Pdata[i]))
+            out.write("{:10.6g},\t{:10.6g},\t{:10.6g},\t{:10.6g}\n".format(self.BiasPts[i], self.Vdata[i], self.Idata[i], self.Pdata[i]))
 
         out.close()
 
     def plotPV(self):
         # Plot PV curve
-        self.ax2.plot(self.Vdata, self.Pdata, 'b-')
+        self.ax2.plot(self.Vdata, self.Pdata, 'g-')
         self.ax2.set(ylabel="Power (W)")
-        self.ax2.set(title="IV Sweep")
 
     def plot(self, ion=True):
         """Plot the acquired data from the sweep.
@@ -160,6 +159,8 @@ class IVP(IV.IV):
         self.plotIV()
         self.ax2 = self.ax.twinx()
         self.plotPV()
+        self.ax.set(title="PV Sweep")
+
         self.fig.show()
 
 if __name__ == "__main__":

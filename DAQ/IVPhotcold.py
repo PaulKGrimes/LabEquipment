@@ -13,13 +13,12 @@ import os
 import time
 import visa
 import numpy as np
-import IV
+import IVP
 import matplotlib.pyplot as plt
 import PowerMeter as PM
 import visa
 
-
-
+np.seterr(all='raise')
 
 class IVPhotcold(IVP.IVP):
     def __init__(self, use="IV.use", verbose=False):
@@ -51,18 +50,18 @@ class IVPhotcold(IVP.IVP):
         hotData = self.getData()
 
         vBias, iBias, cPower = coldData
-        hPower = hotData[3]
+        hPower = hotData[2]
         yFact = self.Yfact(cPower, hPower)
         tsys = self.Tsys(yFact)
 
         if self.verbose:
-            print("Bias     : {.3f} mV".format(self._bias))
-            print("Voltage  : {.3g} mV".format(vBias))
-            print("Current  : {.3g} mA".format(iBias))
-            print("Cold IF  : {.3g} W".format(cPower))
-            print("Hot IF   : {.3g} W".format(hPower))
-            print("Y Factor : {.3g}".format(yFact))
-            print("Tsys     : (.3g}".format(tsys))
+            print("Bias     : {:.3f} mV".format(self._bias))
+            print("Voltage  : {:.3g} mV".format(vBias))
+            print("Current  : {:.3g} mA".format(iBias))
+            print("Cold IF  : {:.3g} W".format(cPower))
+            print("Hot IF   : {:.3g} W".format(hPower))
+            print("Y Factor : {:.3g}".format(yFact))
+            print("Tsys     : {:.3g}".format(tsys))
 
         return vBias, iBias, cPower, hPower, yFact, tsys
 
@@ -70,18 +69,18 @@ class IVPhotcold(IVP.IVP):
         """Calculate the Y Factor, defaulting to sensible value if data is faulty"""
         try:
             Yfact = hPower/cPower
-        except ZeroDivisionError:
+        except (ZeroDivisionError, FloatingPointError):
             Yfact = -1
         return Yfact
 
     def Tsys(self, yFact):
         """Convert a Y Factor to Tsys, using stored values of hot and cold load temperatures"""
-        if Yfact==-1:
+        if yFact==-1:
             return 1.0e99
 
         try:
              tsys = (self.Thot - self.Tcold*yFact)/(yFact-1)
-        except ZeroDivisionError:
+        except (ZeroDivisionError, FloatingPointError):
              tsys = 1.0e99
         return tsys
 
@@ -128,6 +127,7 @@ class IVPhotcold(IVP.IVP):
             self.loadOut()
             # Start the first run through the inner loop over self.loadCycle points
             for index, bias in enumerate(biasPts):
+                index +=i
                 self.setBias(bias)
                 data = self.getData()
 
@@ -140,13 +140,14 @@ class IVPhotcold(IVP.IVP):
             # End of first inner loop over self.loadCycle points
 
             self.loadIn()
-            # Start the first run through the inner loop over self.loadCycle points
+            # Start the second run through the inner loop over self.loadCycle points
             for index, bias in enumerate(biasPts):
+                index +=i
                 self.setBias(bias)
                 data = self.getData()
                 if self.pm != None:
                     self.Hdata[index] = data[2]
-                    self.Ydata[index] = self.Yfact(Cdata[index], Hdata[index])
+                    self.Ydata[index] = self.Yfact(self.Cdata[index], self.Hdata[index])
                     self.Tdata[index] = self.Tsys(self.Ydata[index])
                 else:
                     self.Hdata[index] = 0.0
@@ -154,7 +155,7 @@ class IVPhotcold(IVP.IVP):
                     self.Tdata[index] = 1.0e99
                 # End of second inner loop over self.loadCycle points
 
-            print("\t{:.3f}\t{:.3g}\t{:.3g}\t{:.3g}\t{:.3g}\t{:.3g}\t{:.3g}".format(self.BiasPts[index], self.Vdata[index], self.Idata[index], self.Cdata[index], self.Hdata[index], self.Ydata[index], self.Tdata[index]))
+            print("\t{: <10.6f}\t{: <10.6g}\t{: <10.6g}\t{: <10.6g}\t{: <10.6g}\t{: <10.6g}\t{: <10.6g}".format(self.BiasPts[i], self.Vdata[i], self.Idata[i], self.Cdata[i], self.Hdata[i], self.Ydata[i], self.Tdata[i]))
 
             # increment starting index for inner loops by self.loadCycle
             i = i + self.loadCycle
@@ -171,9 +172,9 @@ class IVPhotcold(IVP.IVP):
 
         # Writes data to spreadsheet
         # Write a header describing the data
-        out.write("# Bias (mV)\tVoltage (mV)\tCurrent (mA)\tCold IF (W)\tHot IF (W)\tY Factor\tTsys (K)\n")
+        out.write("# Bias (mV),\tVoltage (mV),\tCurrent (mA),\tCold IF (W),\tHot IF (W),\tY Factor,\tTsys (K)\n")
         for index in range(len(self.Vdata)):
-            out.write("{:.3f}\t{:.3g}\t{:.3g}\t{:.3g}\t{:.3g}\t{:.3g}\t{:.3g}".format(self.BiasPts[index], self.Vdata[index], self.Idata[index], self.Cdata[index], self.Hdata[index], self.Ydata[index], self.Tdata[index]))
+            out.write("{: >10.6f},\t{: >10.6g},\t{: >10.6g},\t{: >10.6g},\t{: >10.6g},\t{: >10.6g},\t{: >10.6g}\n".format(self.BiasPts[index], self.Vdata[index], self.Idata[index], self.Cdata[index], self.Hdata[index], self.Ydata[index], self.Tdata[index]))
 
         out.close()
 
@@ -182,19 +183,25 @@ class IVPhotcold(IVP.IVP):
         self.ax2.plot(self.Vdata, self.Cdata, 'b-')
         self.ax2.plot(self.Vdata, self.Hdata, 'r-')
         self.ax2.set(ylabel="Power (W)")
-        self.ax2.set(title="PV Sweep")
+        self.ax.set(title="PV Sweep")
 
     def plotYFact(self):
         # Plot PV curve
         self.ax2.plot(self.Vdata, self.Ydata, 'g-')
         self.ax2.set(ylabel="Y Factor")
-        self.ax2.set(title="YV Sweep")
+        self.ax2.set_ylim(0, np.amax(self.Ydata)+0.2)
+        self.ax.set(title="Y Factor Sweep")
+        self.ax.yaxis.grid(False)
+        self.ax2.grid()
 
     def plotTsys(self):
         # Plot PV curve
-        self.ax2.plot(self.Vdata, self.Tdata, 'o-')
+        self.ax2.plot(self.Vdata, self.Tdata, 'r-')
+        self.ax2.set_ylim(0,np.amax(np.where(self.Tdata<2000.0, self.Tdata, 0)))
         self.ax2.set(ylabel="Tsys (K)")
-        self.ax2.set(title="TV Sweep")
+        self.ax.set(title="Tsys Sweep")
+        self.ax.yaxis.grid(False)
+        self.ax2.grid()
 
     def plot(self, ion=True):
         """Plot the acquired data from the sweep.
@@ -224,7 +231,7 @@ if __name__ == "__main__":
     #
     # Usage: python3 <file.dat> <vmin> <vmax> <step> <*use file>
 
-    test = IVP(verbose=True)
+    test = IVPhotcold(verbose=True)
 
     if len(sys.argv) >= 5:
         test.save_name = sys.argv[1]
