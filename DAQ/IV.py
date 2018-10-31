@@ -125,7 +125,7 @@ class IV:
 
         if self.verbose:
             print("New Bias Point: {:.4g} mV".format(bias))
-            print("  Voltage: {:.4g} mV, Current: {:.4g} mA".format(data[0], data[1]))
+            print("  Voltage: {:.4g} mV, Current: {:.4g} uA".format(data[0], data[1]*1000))
         return data
 
     def setBias(self, bias):
@@ -237,7 +237,7 @@ class IV:
 
         # Print a header for intermediate output
         if self.verbose:
-            print("\tBias (mV)\tVoltage (mV)\tCurrent (mA)")
+            print("\tBias (mV)\tVoltage (mV)\tCurrent (uA)")
 
         # Carry out the sweep
         for index, bias in enumerate(self.BiasPts):
@@ -251,7 +251,7 @@ class IV:
 
             # Outputs data while sweep is being taken
             if index%5 == 0 and self.verbose:
-                print("\t{:10.6g}\t{:10.6g}\t{:10.6g}".format(bias, self.Vdata[index], self.Idata[index]))
+                print("\t{:10.6g}\t{:10.6g}\t{:10.6g}".format(bias, self.Vdata[index], self.Idata[index]*1000))
 
 
     def endSweep(self):
@@ -288,9 +288,9 @@ class IV:
 
     def plotIV(self):
         """Plot the IV curve data on the figure"""
-        self.ax.plot(self.Vdata, self.Idata, 'k-')
+        self.ax.plot(self.Vdata, self.Idata*1000, 'k-')
         self.ax.set(xlabel="Voltage (mV)")
-        self.ax.set(ylabel="Current (mA)")
+        self.ax.set(ylabel="Current (uA)")
         self.ax.grid()
         #self.ax.axis([min(self.Vdata), max(self.Vdata), min(self.Idata), max(self.Idata)])
 
