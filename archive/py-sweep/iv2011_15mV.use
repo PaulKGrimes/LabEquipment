@@ -1,0 +1,21 @@
+-15.59 			!Vsweep_min (mV)
+15.00 			!Vsweep_max (mV)
+4096			!Maximum Value of DAC (12 bit = 4096)
+8000			!Scanning Rate (Hz) for A_to_D
+50.02			!Gain of the voltage channel
+0.2015			!Conversion factor for current (mA)
+0			!Boardnum
+14			!Software Gain setting of AD channel (see code below)
+0.000			!zero offset for power channel
+
+
+###############################################################
+Gain setting for AD channels: 
+Range +/-20V (G=1)	code= 15
+Range +/-10V (G=2)	code= 1
+Range +/-5V  (G=4)	code= 0
+Range +/-4V  (G=5)	code= 16
+Range +/-2.5V(G=8)	code= 2
+Range +/-2V  (G=10)	code= 14
+Range +/-1.25V (G=16)	code= 3
+Range +/-1V  (G=20)	code= 4

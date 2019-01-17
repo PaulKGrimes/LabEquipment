@@ -1,0 +1,13 @@
+Test.dat     !Output file name of scan data
+Test.tbl     !Name of reference table for each row
+15 15                       !#Uscan steps           #Vscan steps
+400 400                     !U step size            V step size   (microns)
+2                           !Averaging
+5 5                         !#U center search       #V center search 
+1000                        !Feed speed of tables
+n                           !Centering option --- C for automatic centering
+0                           !Phase offset (deg) in output file
+345.0                       !Signal Frequency in GHz
+12                          !Multiplication factor in source
+120.0                       !IF Offset in MHz
+24                          !Receiver harmonic    

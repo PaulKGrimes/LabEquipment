@@ -1,0 +1,20 @@
+# This is an example config file for PyVVM_VNA.py
+#
+# Measurement setup
+Fstart: 200 GHz
+Fstop: 250 GHz
+Fstep: 0.2 GHz
+Averaging: 10
+
+# System setup
+SourceMultiplier: 9
+SourcePower: 10 dBm
+
+LOMultiplier: 18
+LOOffset: 120 MHz
+LOPower: 18 dBm
+
+# Settling time for measurement in ms
+SettleTime: 500 ms
+MeasureTime: 500 ms
+
