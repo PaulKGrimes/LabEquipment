@@ -1,0 +1,4 @@
+include README.md
+include WIN-Install.bat
+include BASH-Install.sh
+recursive-include config *.hjson

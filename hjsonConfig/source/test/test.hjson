@@ -1,0 +1,5 @@
+{
+    "test1":"Test Value 1",
+    "config-file":"test/test2.hjson",
+    "test2":"Test Value 2"
+}

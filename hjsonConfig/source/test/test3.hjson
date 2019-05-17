@@ -1,0 +1,40 @@
+# Bias box default configuration file
+# Assumes we don't know anything about the bias box, except that we are
+# using a unipolar to bipolar convertor
+{
+    # Uses default DAQ configuration
+    "daq":{
+        #"config-file":"test2.hjson",  # If this is present and not "None",
+    #                                 # read the DAQ config from a file
+    #    # Settings here (before or after "config-file") override the config file and are optional
+        "boardnum":0, # DAQ board number to use
+        "DACrange":5, # DAC maximum voltage
+    #    "ADCmode":"differential", # ADC input mode - "differential" or "single-ended"
+    #    "ADCpolarity":"bipolar", # ADC input polarity - "bipolar" or "unipolar"
+    #    "ADCrange":5 # ADC maxium voltage
+    },
+    # Analog bias voltage out configuration
+    #"vOut":{
+    #    "channel":0, # Analog output channel
+    #    "gain":2.0, # Conversion between Vout and mV at junction (mV/V)
+    #    "offset":2.5 # Voltage output that sets junction bias to 0mV
+    #},
+    # Analog voltage in configuration
+    "vIn":{
+        "channel":0, # Analog input channel
+        "gain":1.0, # Conversion between mV and V (V/mV)
+        "offset":0.0 # Offset of bias box in mV
+    },
+    # Analog current in configuration
+    "iIn":{
+        "channel":1, # Analog input channel
+        "gain":1.0, # Conversion between mA and V (V/mA)
+        "offset":0.0 # Offset of bias box in mA
+    },
+    "Vmin":-5.0, # Maximum voltage of bias box (mV)
+    "Vmax":5.0, # Minimum voltage of bias box (mV)
+
+    # Sampling setup
+    "rate":24000, # Raw ADC sample rate
+    "average":200 # Number of samples to average per data point
+}

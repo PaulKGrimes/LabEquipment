@@ -1,0 +1,33 @@
+# Bias box configuration file
+{
+    "config-file":"test/test3.hjson",
+    "daq":{
+        "ADCmode":"differential", # ADC input mode - "differential" or "single-ended"
+        "ADCpolarity":"bipolar", # ADC input polarity - "bipolar" or "unipolar"
+        "ADCrange":5 # ADC maxium voltage
+    },
+    # Analog bias voltage out configuration
+    "vOut":{
+        #"channel":0, # Analog output channel
+        "gain":-0.1396, # Conversion between Vout and mV at junction (mV/V)
+        "offset":2.503 # Voltage output that sets junction bias to 0mV
+    },
+    # Analog voltage in configuration
+    "vIn":{
+        #"channel":0, # Analog input channel
+        "gain":49.81, # Conversion between mV and V (V/mV)
+        "offset":0.0008 # Offset of bias box in mV
+    },
+    # Analog current in configuration
+    // "iIn":{
+    //     "channel":1, # Analog input channel
+    //     "gain":4.80, # Conversion between mA and V (V/mA)
+    //     #"offset":0.0 # Offset of bias box in mA
+    // },
+    #"Vmin":-15.2, # Maximum voltage of bias box (mV)
+    "Vmax":14.34, # Minimum voltage of bias box (mV)
+
+    # Sampling setup
+    #"rate":24000, # Raw ADC sample rate
+    #"average":200 # Number of samples to average per data point
+}

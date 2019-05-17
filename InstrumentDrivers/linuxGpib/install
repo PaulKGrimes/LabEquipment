@@ -1,0 +1,128 @@
+Raspberry Pi - GPIB Communication:
+
+1. Install pyvisa. This has built-in backends for usb, serial, etc. but not GPIB. Linux-gpib is required as a GPIB backend.
+
+	sudo -s
+	pip3 install pyvisa 
+	pip3 install pyusb
+	pip3 install pyvisa-py
+
+2. Update system and kernels
+
+	apt-get update
+	wget https://raw.githubusercontent.com/notro/rpi-source/master/rpi-source -O /usr/bin/rpi-source && sudo chmod +x /usr/bin/rpi-source && /usr/bin/rpi-source -q --tag-update
+
+	uname -a
+	rpi-source 
+	### If this returns an error, do this step.
+	//
+	apt-get update
+	apt-get install -y gcc-4.9 g++-4.9
+	//
+	update-alternatives --install /usr/bin/gcc gcc /usr/bin/gcc-4.9 50
+	update-alternatives --install /usr/bin/g++ g++ /usr/bin/g++-4.9 50
+
+	gcc --version
+
+	update-alternatives --config gcc
+	rpi-source
+
+	apt-get install tk-dev
+
+	apt-get install build-essential texinfo texi2html libcwidget-dev libncurses5-dev libx11-dev binutils-dev bison flex libusb-1.0-0 libusb-dev libmpfr-dev libexpat1-dev tofrodos subversion autoconf automake libtool fxload
+	
+	apt-get install raspberrypi-kernel-headers
+	
+	cd /usr/src/linux-headers-4.9.59-v7+/
+	ln -s arm armv7l
+
+3. Install linux-gpib
+
+	cd /home/
+	mkdir linux-gpib
+	cd linux-gpib
+	svn checkout svn://svn.code.sf.net/p/linux-gpib/code/trunk linux-gpib-code
+	ldconfig
+	cd linux-gpib-code/linux-gpib-user/
+	./bootstrap
+	./configure
+	make
+	make install
+	cd linux-gpib-code/linux-gpib-kernel/
+
+4. Update to specific GPIB
+
+	modprobe gpib_common
+	modprobe ni_usb_gpib
+	lsmod
+	# Go to /etc/gpib.conf
+	# Change "board_type = "ni_pci" " to "board_type "ni_usb_b" "
+	
+	NOTE: If denied permission to edit file, do this step:
+	//
+	cd /etc/
+	leafpad gpib.conf #
+	//
+	NOTE: If gpib.conf file does not exist, copy info from https://www.cl.cam.ac.uk/~osc22/tutorials/gpib.conf into:
+	//
+	cd /etc/
+	leafpad
+	* save as gpib.conf *
+
+	ldconfig
+	gpib_config
+	
+5. Download firmware
+	wget http://linux-gpib.sourceforge.net/firmware/gpib_firmware-2008-08-10.tar.gz
+	tar xvfz gpib_firmware-2008-08-10.tar.gz
+	cd ..
+
+6. Use fxload to upload firmware
+	wget --content-disposition --no-check-certificate https://downloads.sourceforge.net/project/linux-hotplug/fxload/2008_10_13/fxload-2008_10_13.tar.gz
+	tar xvfz fxload-2008_10_13.tar.gz
+	cd fxload-2008_10_13
+	make
+	sudo make install
+	cd ..
+
+7. Check for connection
+
+	ibtest # (d)evice --> address --> (w)rite --> *IDN? --> (r)ead --> 1024
+
+8. Connect with python
+
+	apt-get install python-dev
+	cd /home/linux-gpib/linux-gpib-code/linux-gpib-user/language/python
+	python3 ./setup.py install
+
+9. Check GPIB with python
+
+	python3
+
+	#In python: 
+	import Gpib
+	inst = Gpib.Gpib(0,8) # Device address 8
+	inst.write("*IDN?")
+	inst.read(100)
+
+10. Check pyvisa is completely updated
+
+	python3 -m visa info
+	# All interface types should now read "Available"
+
+NOTE: The GPIB module can be used directly as well to communicate with device. However, the GPIB backend is now supported in pyvisa as well.
+
+11. Check pyvisa in python
+
+	python3
+	
+	#In python:
+	import visa
+	rm = visa.ResourceManager('@py')
+	lr = rm.list_resources()
+	print(lr)
+	# All GPIB devices should be listed
+
+	inst = rm.open_resource("GPIB0::8::INSTR") # Device address 8
+	idn = inst.query("*IDN?")
+	print(idn)

@@ -1,0 +1,11 @@
+# DAQ configuration file for use with MCC DAQ boards
+{
+    "boardnum":0, # DAQ board number to use
+    "DACrange":5.0, # DAC maximum voltage
+    "ADCmode":"differential", # ADC input mode - "differential" or "single_ended"
+    "ADCpolarity":"bipolar", # ADC input polarity - "bipolar", "unipolar" or "ma" (for current)
+    "ADCrange":5, # ADC maximum voltage
+    "DOutPort": "FIRSTPORTA", # Digital port to be configured for output
+    "DInPort": "FIRSTPORTB", # Digital port to be configured for input
+    "sleepTime":0.002 # Time to sleep between AInScan checks
+}

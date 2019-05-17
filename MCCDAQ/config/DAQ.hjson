@@ -1,0 +1,8 @@
+# DAQ configuration file for use with MCC DAQ boards
+{
+    "boardnum":0, # DAQ board number to use
+    "DACrange":5, # DAC maximum voltage
+    "ADCmode":"differential", # ADC input mode - "differential" or "single-ended"
+    "ADCpolarity":"bipolar", # ADC input polarity - "bipolar" or "unipolar"
+    "ADCrange":5 # ADC maximum voltage
+}
