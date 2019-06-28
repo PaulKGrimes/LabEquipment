@@ -1,2 +1,2 @@
 include README.md
-recursive-include source/test *.hjson
+recursive-include tests *.hjson

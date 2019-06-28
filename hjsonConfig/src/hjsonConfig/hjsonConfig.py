@@ -5,7 +5,7 @@ import jsonmerge
 import hjson
 import copy
 from pprint import pprint
-from pkg_resources import resource_filename
+import os.path
 
 defaultDir = None
 
@@ -72,12 +72,11 @@ class hjsonConfig(hjson.OrderedDict):
                 try:
                     if self.verbose:
                         print("hjsonConfig._readFile: Couldn't find config file {:s} in current directory, trying {:s}", (filename, dir))
-                    ### FIX THIS ###
-                    newFileName = resource_filename("LabEquipment", "/config/{:s}".format(filename))
+                    newFileName = os.path.join(dir, filename)
                     # check we aren't setting up an infinite loop
                     if newFileName == filename:
                         if self.verbose:
-                            raise RunTimeError("hjsonConfig._readFile: Circular reference to config file {:s}".format(newFileName))
+                            raise RuntimeError("hjsonConfig._readFile: Circular reference to config file {:s}".format(newFileName))
                         return None
                     if self.verbose:
                         print("hjsonConfig._readFile: Trying config file: ", newFileName)
@@ -91,12 +90,11 @@ class hjsonConfig(hjson.OrderedDict):
             try:
                 if self.verbose:
                     print("hjsonConfig._readFile: Couldn't find config file {:s}, trying {:s}", (filename, defaultDir))
-                ### FIX THIS ###
-                newFileName = resource_filename(defaultDir, "/config/{:s}".format(filename))
+                newFileName = os.path.join(defaultDir, filename)
                 # check we aren't setting up an infinite loop
                 if newFileName == filename:
                     if self.verbose:
-                        raise RunTimeError("hjsonConfig._readFile: Circular reference to config file {:s}".format(newFileName))
+                        raise RuntimeError("hjsonConfig._readFile: Circular reference to config file {:s}".format(newFileName))
                     return None
                 if self.verbose:
                     print("hjsonConfig._readFile: Trying config file: ", newFileName)
@@ -104,7 +102,7 @@ class hjsonConfig(hjson.OrderedDict):
                 return newConfig
             except OSError:
                 # Raise an error this time, because we just can't find the file
-                raise RunTimeError("hjsonConfig._readFile: File {:s} not found.".format(filename))
+                raise RuntimeError("hjsonConfig._readFile: File {:s} not found.".format(filename))
         return None
 
     def _copyIn(self, odict):
