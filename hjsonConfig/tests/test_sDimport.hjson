@@ -1,0 +1,5 @@
+{
+    "test_value 1":"Test Value 1 - top level",
+    "config-file":"test_specifiedDirImport.hjson",
+    "test value 2":"Test Value 2 - top level"
+}

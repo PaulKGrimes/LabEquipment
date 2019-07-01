@@ -1,0 +1,5 @@
+{
+    "config-file":"test_nestedImport3.hjson",
+    "test3":"Test Value 3 - specifiedDir import",
+    "test2":"Test Value 2 - specifiedDir import"
+}

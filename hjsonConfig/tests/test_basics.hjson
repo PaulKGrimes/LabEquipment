@@ -1,0 +1,12 @@
+{
+    "test_string":"Test Value 1",
+    "test_float":3.141259,
+    "test_int":42,
+    "test_list":["list1", "list2", "list3"],
+    "test_dir":{
+        "test_dir_string":"Test Dir String",
+        "test_dir_float":2.787,
+        "test_dir_int":69
+        }
+    # Test comment
+}
