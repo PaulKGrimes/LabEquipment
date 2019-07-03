@@ -1,4 +1,4 @@
 {
-    "test3":"Test Value 3 - local import",
-    "test2":"Test Value 2 - local import"
+    "test_value3":"Test Value 3 - local import",
+    "test_value2":"Test Value 2 - local import"
 }

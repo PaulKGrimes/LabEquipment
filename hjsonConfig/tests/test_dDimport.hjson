@@ -1,5 +1,5 @@
 {
-    "test_value 1":"Test Value 1 - top level",
+    "test_value1":"Test Value 1 - top level",
     "config-file":"test_defaultDirImport.hjson",
-    "test value 2":"Test Value 2 - top level"
+    "test_value2":"Test Value 2 - top level"
 }
