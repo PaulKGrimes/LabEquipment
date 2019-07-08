@@ -44,7 +44,7 @@ def test_list_length(read_local):
     assert len(test["test_list"]) == 3
 
 def test_dict_type(read_local):
-    assert type(test["test_dir"])  is __builtins__.dictType
+    assert type(test["test_dir"])  is hjsonConfig.hjson.OrderedDict
 
 def test_dict_length(read_local):
     assert len(test["test_dir"].keys()) == 3

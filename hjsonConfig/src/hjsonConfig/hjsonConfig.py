@@ -41,7 +41,7 @@ class hjsonConfig(hjson.OrderedDict):
     Entries duplicated in the top level file override the entries in an included file."""
     def __init__(self, *args, filename=None, verbose=False, **kwds):
         """Very basic set up"""
-        super(hjson.OrderedDict, self).__init__(*args, **kwds)
+        super(hjson.OrderedDict, self).__init__()
         self.verbose = verbose
         self.filename = filename
         if filename != None:
