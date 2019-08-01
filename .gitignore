@@ -11,3 +11,4 @@ LabEquipment.egg-info
 *.log
 *.logxx
 *.csv
+*egg-info
