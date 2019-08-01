@@ -38,7 +38,17 @@ class hjsonConfig(hjson.OrderedDict):
     """A class to handle reading configurations in hjson files, which
     may include references to other hjson files via "config-file" entries.
 
-    Entries duplicated in the top level file override the entries in an included file."""
+    Entries duplicated in the top level file override the entries in an included file.
+
+    Inherits from OrderedDict, a dictionary type that conserves order that keys
+    are added. Inherits most methods from Python built-in dictionary type.
+
+    Attributes:
+        filename: file location from which top level config was read. Used to check
+            for circular imports.
+        verbose: boolean controlling how much informational output methods give.
+
+    """
     def __init__(self, *args, filename=None, verbose=False, **kwds):
         """Very basic set up"""
         super(hjson.OrderedDict, self).__init__()
@@ -53,7 +63,12 @@ class hjsonConfig(hjson.OrderedDict):
         """Read an .hjson configuration file and return.
 
         If <filename> is not found in the current directory, look in dir first, then
-        module level defaultDir."""
+        module level defaultDir.
+
+        Args:
+            filename: string containing the file location to read.
+            dir: optional directory to look for the file in. Default to None.
+        """
         assert filename != None
         if self.verbose:
             print("hjsonConfig._readFile: Reading file: ", filename)
@@ -115,7 +130,11 @@ class hjsonConfig(hjson.OrderedDict):
             pass
 
     def readFile(self, filename):
-        """Read a config file from filename"""
+        """Read a config file from filename
+
+        Args:
+            filename: string containing file location to read.
+        """
         # Have to delete data from self and then copy data from readFile return value.
         if self.filename == None:
             if self.verbose:
